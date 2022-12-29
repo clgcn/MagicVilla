@@ -15,8 +15,18 @@ public class VillaApiController : ControllerBase
     }
     
     [HttpGet("{id:int}")]
-    public VillaDto GetVilla(int id)
+    public ActionResult<VillaDto> GetVilla(int id)
     {
-        return VillaStore.VillaList().FirstOrDefault(u => u.Id == id)!;
+        if (id == 0)
+        {
+            return BadRequest();
+        }
+        var villa = VillaStore.VillaList().FirstOrDefault(u => u.Id == id);
+        if (villa == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(villa);
     }
 }
