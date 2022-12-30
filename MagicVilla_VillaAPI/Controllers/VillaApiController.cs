@@ -1,5 +1,8 @@
+using System.Collections.Generic;
+using System.Linq;
 using MagicVilla_VillaAPI.Data;
 using MagicVilla_VillaAPI.Models.Dto;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MagicVilla_VillaAPI.Controllers;
@@ -45,6 +48,13 @@ public class VillaApiController : ControllerBase
         if (villaDto == null)
         {
             return BadRequest(villaDto);
+        }
+
+        if (VillaStore.VillaList.FirstOrDefault(u=>u.Name.ToLower() == villaDto.Name.ToLower()) != null)
+        {
+            // add custom modelState
+            ModelState.AddModelError("CustomError", "The villa is exist!");
+            return BadRequest(ModelState);
         }
 
         if (villaDto.Id < 0 || villaDto.Id <= villaDtoId)
